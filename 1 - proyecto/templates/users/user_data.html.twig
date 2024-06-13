@@ -1,0 +1,224 @@
+{% extends "users/control_panel.html.twig" %}
+
+{% block content %}
+    <h2 class="control__title--mobile">Datos del usuario</h2>
+    {# Billing direction container start #}
+    <article class="content__billing">
+        <h2 class="control__title">Facturación  <i class="bi bi-chevron-down control__icon--collapse control__icon--rotate"></i></h2>
+        <div class="control__container--collapse">
+            <div class="billing__container">
+            {% for billDirection in billings %}
+                <div class="billing__card" identifier="{{ billDirection.idBilling }}">
+                    <h3 class="billing__title">{{ billDirection.billingName }}</h3>
+                    <p class="billing__text"><strong>Dirección: </strong>{{ billDirection.billingDirection }}, {{ billDirection.billingPostal }}, {{ billDirection.billingPoblation }}, {{ billDirection.billingProvince }}</p>
+                    <p class="billing__text"><strong>Teléfono: </strong>{{ billDirection.billinTlfo }}</p>
+                    <i class="bi bi-x billing__icon--delete"></i>
+                </div>
+            {% endfor %}
+            </div>
+            <button class="control__button control__add--billing">Añadir dirección</button>
+        </div>
+    </article>
+    {# Billing direction container end #}
+
+    {# Pay methods container start #}
+    <article class="content__pay">
+        <h2 class="control__title">Métodos de pago <i class="bi bi-chevron-down control__icon--collapse"></i></h2>
+        <div class="control__container--collapse collapsed--unset">
+            <div class="pay__container">
+            {% for card in cards %}
+                <div class="pay__card" identifier="{{ card.idCard }}">
+                    <h3 class="pay__title">Termina en {{ card.cardNumber | slice((card.cardNumber | length) - 4, card.cardNumber | length) }} </h3>
+                    <p class="pay__text">{{ card.cardName }}</p>
+                    <p class="pay__text">Caduca el {{ card.cardExpire }}</p>
+                    <i class="bi bi-x pay__icon--delete"></i>
+                </div>
+            {% endfor %}
+            </div>
+            <button class="control__button control__add--card">Añadir tarjeta</button>
+        </div>
+    </article>
+    {# Pay methods container end #}
+
+    {# User data container start #}
+    <article class="content__data">
+        <h2 class="control__title">Datos de mi cuenta <i class="bi bi-chevron-down control__icon--collapse"></i></h2>
+        <div class="control__container--collapse collapsed--unset">
+            {# User name change form start #}
+            {{ form_start(userNameForm, {'attr' : {'action' : path('change_username'), 'class': 'control__form' }}) }}
+
+                {{ form_label(userNameForm.userName) }}
+                <div class="control__container">
+                    {{ form_widget(userNameForm.userName, {'value': app.user.username}) }}
+                    <input type="submit" value="Guardar" class="control__button">
+                </div>
+                {{ form_errors(userNameForm.userName, {'attr': {'class' : 'form__error'}}) }}
+                
+                {# Succes flash message #}
+                {% for flash in app.flashes('successName') %}
+                    <p class="form__success"> {{flash}} </p>
+                {% endfor %}
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token('APPLE-LISA') }}">
+
+            {{ form_end(userNameForm) }}
+            {# User name change form end #}
+
+            {# User email change form start #}
+            {{ form_start(userMailForm, {'attr' : {'action' : path('change_email'), 'class': 'control__form' }}) }}
+
+                {{ form_label(userMailForm.userEmail) }}
+                <div class="control__container">
+                    {{ form_widget(userMailForm.userEmail, {'value': app.user.useremail}) }}
+                    <input type="submit" value="Guardar" class="control__button">
+                </div>
+                {{ form_errors(userMailForm.userEmail, {'attr': {'class' : 'form__error'}}) }}
+
+                {# Succes flash message #}
+                {% for flash in app.flashes('successEmail') %}
+                    <p class="form__success"> {{flash }} </p>
+                {% endfor %}
+                
+                <input type="hidden" name="csrf_token" value="{{ csrf_token('APPLE-LISA') }}">
+
+            {{ form_end(userMailForm) }}
+            {# User email change form end #}
+
+            {# User password change form start #}
+            {{ form_start(userPassForm, {'attr' : {'action' : path('change_pass'), 'class': 'control__form--pass' }}) }}
+
+                <div class="control__container--pass">
+                    <div class="control__container--column">
+                        {{ form_label(userPassForm.password) }}
+                        {{ form_widget(userPassForm.password) }}
+                    </div>
+                    <div class="control__container--column">
+                        {{ form_label(userPassForm.newPass.first) }}
+                        {{ form_widget(userPassForm.newPass.first) }}
+                    </div>
+                    <div class="control__container--column">
+                        {{ form_label(userPassForm.newPass.second) }}
+                        <div class="control__container">
+                            
+                            {{ form_widget(userPassForm.newPass.second) }}
+                            {{ form_errors(userPassForm.newPass.first) }}
+                            <input type="submit" value="Guardar" class="control__button">
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <input type="hidden" name="csrf_token" value="{{ csrf_token('APPLE-LISA') }}">
+            {{ form_end(userPassForm) }}
+            {# User password change form end #}
+            
+            {# Error flash message #}
+            {% for flash in app.flashes('error') %}
+                <span class="form__error"> {{flash }} </span>
+            {% endfor %}
+
+            {# Succes flash message #}
+            {% for flash in app.flashes('successPass') %}
+                <p class="form__success"> {{flash }} </p>
+            {% endfor %}
+        </div>   
+    </article>
+    {# User data container end #}
+    {# New card form start #}
+    <article class="control__container--full {{ userNewCard.vars.valid ? 'control__container--none' : '' }}">
+        {{ form_start(userNewCard, {'attr' : {'action' : path('add_card'), 'class': 'control__form--card' }}) }}
+
+            <i class="bi bi-x card__icon--closeForm"></i>
+            <h2 class="control__title--form">Nueva Tarjeta</h2>
+            
+            <div class="control__container--card">
+                {{ form_label(userNewCard.cardNumber) }}
+                {{ form_widget(userNewCard.cardNumber) }}
+                {{ form_errors(userNewCard.cardNumber) }}
+            </div>
+
+            <div class="control__container--half">
+                {{ form_label(userNewCard.cardExpire) }}
+                {{ form_widget(userNewCard.cardExpire) }}
+            </div>
+
+            <div class="control__container--half">
+                {{ form_label(userNewCard.cardCvv) }}
+                {{ form_widget(userNewCard.cardCvv) }}
+            </div>
+
+            {{ form_errors(userNewCard.cardCvv) }}
+            {{ form_errors(userNewCard.cardExpire) }}
+
+            <div class="control__container--card">
+                {{ form_label(userNewCard.cardName) }}
+                {{ form_widget(userNewCard.cardName) }}
+                {{ form_errors(userNewCard.cardName) }}
+            </div>
+            
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <input type="submit" value="Guardar" class="control__button">
+
+        {{ form_end(userNewCard) }}
+    </article>
+    {# New card form end #}
+    {# New billing direction form start #}
+    <article class="control__container--full {{ userNewBilling.vars.valid ? 'control__container--none' : '' }}">
+        {{ form_start(userNewBilling, {'attr' : {'action' : path('add_billing_direction'), 'class': 'control__form--billing' }}) }}
+
+            <i class="bi bi-x card__icon--closeForm"></i>
+            <h2 class="control__title--form">Nueva dirección</h2>
+
+            <div class="control__container--card">
+                {{ form_label(userNewBilling.billingName) }}
+                {{ form_widget(userNewBilling.billingName) }}
+                {{ form_errors(userNewBilling.billingName) }}
+            </div>
+
+            <div class="control__container--card">
+                {{ form_label(userNewBilling.billingDirection) }}
+                {{ form_widget(userNewBilling.billingDirection) }}
+                {{ form_errors(userNewBilling.billingDirection) }}
+            </div>
+
+            <div class="control__container--half">
+                {{ form_label(userNewBilling.billingPostal) }}
+                {{ form_widget(userNewBilling.billingPostal) }}
+            </div>
+
+            <div class="control__container--half">
+                {{ form_label(userNewBilling.billingPoblation) }}
+                {{ form_widget(userNewBilling.billingPoblation) }}
+            </div>
+
+            {{ form_errors(userNewBilling.billingPostal) }}
+            {{ form_errors(userNewBilling.billingPoblation) }}
+
+            <div class="control__container--card">
+                {{ form_label(userNewBilling.billingCountry) }}
+                {{ form_widget(userNewBilling.billingCountry) }}
+                {{ form_errors(userNewBilling.billingCountry) }}
+            </div>
+
+             <div class="control__container--half">
+                {{ form_label(userNewBilling.billingProvince) }}
+                {{ form_widget(userNewBilling.billingProvince) }}
+            </div>
+
+             <div class="control__container--half">
+                {{ form_label(userNewBilling.billinTlfo) }}
+                {{ form_widget(userNewBilling.billinTlfo) }}
+            </div>
+
+                {{ form_errors(userNewBilling.billinTlfo) }}
+                {{ form_errors(userNewBilling.billingProvince) }}
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <input type="submit" value="Guardar" class="control__button">
+
+        {{ form_end(userNewBilling) }}
+    </article>
+    {# New billign direction form end #}
+
+{% endblock %}
+

@@ -1,0 +1,39 @@
+@mixin flex-style($direction: none, $align: none, $alignC: none, $justify: none, $wrap: none)
+{
+    display: flex;
+    @if($direction != none){
+        flex-direction: $direction;
+    }
+    @if($align != none){
+        align-items: $align;
+    }
+    @if($justify != none){
+        justify-content: $justify;
+    }
+    @if($wrap != none){
+        flex-wrap: $wrap;
+    }
+
+    @if($alignC != none){
+        align-content: $alignC;
+    }
+}
+
+@mixin text-style($color, $font, $weight)
+{
+    color: $color;
+    font-size: $font;
+    font-weight: $weight;
+}
+
+@mixin button-hover()
+{
+    transition: background-color 0.25s;
+    background-color: var(--background_blue_dark);
+}
+
+@mixin padding($padding)
+{
+    padding: $padding;
+    box-sizing: border-box;
+}

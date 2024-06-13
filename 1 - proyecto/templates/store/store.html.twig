@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} GameNexus | Tienda {% endblock %}
+
+{% block body %}
+
+<main class="store" role="main">
+    {# Store top container start #}
+    <div class="store__container--title">
+        {# Get store page title from uri #}
+        {% if 'all' in app.request.uri  %}
+            <h2 class="store__title">Todos los productos</h2>
+        {% elseif 'ofertas' in app.request.uri %}
+            <h2 class="store__title">Juegos en oferta</h2>
+        {% else %}
+            <h2 class="store__title">Juegos de {{ app.request.uri | slice(strrpos('/', app.request.uri) + 1, app.request.uri | length) | capitalize }}</h2>
+        {% endif %}
+
+        <span class="store__count">{{paginator.total}} videojuegos</span>
+        <div class="store__container--select">
+            <select name="orderBy" class="store__select">
+                <option value="rel">Relevancia</option>
+                <option value="lowPrice">Precio ascendente</option>
+                <option value="highPrice">Precio descendente</option>
+                <option value="lowValoration">Valoración ascendente</option>
+                <option value="highValoration">Valoración descendente</option>
+            </select>
+            <i class="bi bi-funnel  store__filter"></i>
+        </div>
+    </div>
+    {# Store top container end #}
+    {# Store menu container start #}
+    <section class="store__container--menu">
+        <h2 class="store__title--secondary">Filtros <i class="bi bi-x  store__icon--close"></i></h2>
+        <ul class="store__list" data-type="developer">
+            <li class="store__title--list" >Desarrollador</li>
+            {% for key,value in developers %}
+
+                <li class="store__item">
+                    <span class="store__span"><input type="checkbox"class="store__checkBox" value="{{key}}">{{key}}</span> 
+                    <span class="store__span--light">{{ value }}</span>
+                </li>
+
+            {% endfor %}
+        </ul>
+        {% if platformFilter == 1 %}
+            <ul class="store__list" data-type="platform">
+                <li class="store__title--list">Plataforma</li>
+                {% for key,value in platforms %}
+
+                    <li class="store__item">
+                        <span class="store__span"><input type="checkbox" name="" class="store__checkBox" value="{{key}}">{{key | capitalize}}</span> 
+                        <span class="store__span--light">{{ value }}</span>
+                    </li>
+
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <ul class="store__list" data-type="stock">
+            <li class="store__title--list">Disponibilidad</li>
+            {% for key,value in stock %}
+
+                <li class="store__item">
+                    <span class="store__span"><input type="checkbox" name="" class="store__checkBox" value="{{key}}">{{ key }}</span> 
+                    <span class="store__span--light">{{ value }}</span>
+                </li>
+
+            {% endfor %}
+        </ul>
+
+        <ul class="store__list" data-type="pegi">
+            <li class="store__title--list">Pegi</li>
+            {% for key,value in pegi %}
+
+                <li class="store__item">
+                    <span class="store__span"><input type="checkbox" name="" class="store__checkBox" value="{{key}}">{{key}}</span> 
+                    <span class="store__span--light">{{ value }}</span>
+                </li>
+
+            {% endfor %}
+        </ul>
+    </section>
+    {# Store menu container end #}
+    {# Store products container start #}
+    <section class="store__container--content">
+        {% include 'ajax/cardGame.html.twig' %}
+    </section>
+    {# Store products container end #}
+    <div class="main__background"></div>
+</main>
+
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        if('{{data}}' == 'ofertas'){
+            var platformLimit = 'all';
+            var offersValue =true;
+        }else{
+            var platformLimit = '{{data}}';
+            var offersValue =false;
+        }
+    </script>
+    <script src="{{ asset('static/javascript/store.js') }}"></script>
+
+{% endblock %}

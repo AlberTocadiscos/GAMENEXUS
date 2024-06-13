@@ -1,0 +1,357 @@
+@use 'mixins' as mixin;
+@use 'var';
+
+.container
+{
+    width: 100%;
+    height: min-content;
+
+    &__form, &__img
+    {
+        width: 38%;
+        min-height: calc(100vh - 120px)
+    }
+
+    &__form
+    {
+        min-width: 500px;
+        @include mixin.flex-style($justify: center, $align: center, $direction:column);
+        padding: 20px 0px;
+        box-sizing: border-box;
+    }
+
+    &__img
+    {  
+        width: 62%;
+        background-image: url('../img/loginBackground.webp');
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+
+        &::after
+        {
+            content: "";
+            height: 100%;
+            width: 15%;
+            background-color: var(--background_body);
+            position: absolute;
+            left: -2px;
+            top: 0;
+            webkit-clip-path: polygon(100% 0, 0 0, 0 100%);
+            clip-path: polygon(100% 0, 0 0, 0 100%);
+        }
+    }
+
+    &__index
+    {
+        width: 100%;
+        height: min-content;
+        @include mixin.flex-style($direction:column, $justify:space-between);
+        margin: 15px 0px;
+    }
+}
+
+.main
+{
+    width: 1280px;
+    height: min-content;
+    padding: 10px;
+    box-sizing: border-box;
+    @include mixin.flex-style($justify: space-between, $wrap: wrap);
+    margin: 30px 0px;
+
+    &__form
+    {
+        @extend .main;
+        @include mixin.padding(0);
+        @include mixin.flex-style($justify: space-between, $wrap:nowrap);
+        width: 100%;
+        height: min-content;
+    }
+
+    &__background
+    {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.2);
+        z-index: 5;
+        display: none;
+
+        &--visible
+        {
+            @extend .main__background;
+            display: initial;
+        }
+    }
+}
+
+
+.product
+{
+    @extend .main;
+}
+
+
+.header
+{
+    &__container
+    {
+        @include mixin.flex-style($justify:space-around);
+        width: 450px;
+    }
+}
+
+.gallery
+{
+    @include mixin.flex-style($direction:column, $align:center, $justify:space-between);
+    height: 620px;
+    width: min-content;
+
+    &--mobile
+    {
+        @include mixin.flex-style($direction:column, $align:center, $justify:space-between);
+        height: min-content;
+        width: 100%;
+        display: none;
+    }
+}
+
+.cart
+{
+    @extend .main;
+    min-height: calc(100vh - 400px);
+
+    &__container
+    {   
+        @include mixin.padding(0 5px 0 0);
+        @include mixin.flex-style($align:center, $justify:space-between, $direction:column);
+        width: 100%;
+        max-height: 250px;
+        margin-bottom: 20px;
+        overflow-y: auto;
+    }
+
+    &__grid
+    {
+        &--left
+        {
+            @include mixin.flex-style($align:center, $justify:center, $direction:column);
+            grid-area: 1 / 1 / 2 / 2;
+        }
+
+        &--right
+        {
+            @include mixin.padding(5px 5px 5px 15px);
+            @include mixin.flex-style($align:start, $justify:start, $direction:column);
+            grid-area: 1 / 2 / 2 / 3;
+        }
+    }
+}
+
+.store
+{
+    @extend .main;
+    margin: 0;
+
+    &__container
+    {
+        height: min-content;
+        
+        &--title
+        {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, auto);
+            grid-template-areas: 'titulo titulo' 'total select';
+        }
+
+        &--menu
+        {
+            @extend .card__class;
+            @include mixin.flex-style($justify:start, $direction:column, $align:center);
+            @include mixin.padding(0px 20px);
+            width: 250px;
+            margin-top: 20px;
+        }
+
+        &--products
+        {
+            width: 100%;
+            display: grid;
+            min-height: 100px;
+            grid-template-columns: repeat(auto-fill, 280px);
+            grid-template-rows: repeat(2, auto);
+            justify-content: space-between;
+            gap: 20px;
+            position: relative;
+            
+        }
+
+        &--content
+        {
+            @include mixin.flex-style($justify:start, $direction:column);
+            width: clamp(600px, 75vw, 74%);
+            height: min-content;
+            margin-top: 20px;
+            position: relative;
+        }
+        &--paginator
+        {
+            @include mixin.flex-style($justify:center, $align:center);
+            width: 100%;
+            height: min-content;
+            margin-top: 20px;
+        }
+
+        &--select
+        {
+            grid-area: select;
+            @include mixin.flex-style($justify:end, $align:center);
+            gap: 20px
+        }
+    }
+}
+
+
+.button--full
+{
+    @extend .text18__class;
+    @include mixin.flex-style($align:center, $justify:center);
+    transition: background-color 0.4s linear;
+    width: 100%;
+    height: 40px;
+    font-weight: 600;
+    background-color: var(--background_pink);
+    text-decoration: none;
+    border-radius: 5px;
+    border: 5px solid var(--background_pink);
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.paginator
+{
+    width: 100%;
+    height: 30px;
+    @include mixin.flex-style($align:center, $justify:center);
+
+    &__page
+    {
+        @include mixin.text-style(var(--white), var(--label), 600);
+        margin: 0 10px;
+    }
+
+    &__button
+    {
+        @extend .button--full;
+        height: 30px;
+        width: 30px;
+
+        &:hover
+        {
+            @include mixin.button-hover;
+        }
+        
+        &--disabled
+        {   
+            @extend .paginator__button;
+            filter: contrast(50%);
+            cursor: default;
+        }
+    }
+}
+
+.card__class
+{
+    width: min-content;
+    height: min-content;
+    background-color: var(--background_secondary);
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+
+    &--primary
+    {
+        @extend .card__class;
+        background-color: var(--background_primary);
+    }
+}
+
+.input__class
+{
+    @include mixin.padding(5px);
+    width: 100%;
+    height: 40px;
+    color: var(--white);
+    background-color: var(--background_body);
+    border-radius: 10px;
+    border: 3px solid var(--input_border);
+}
+
+.title__class
+{
+    @include mixin.text-style(var(--white), var(--title), 700);
+}
+
+.title25__class
+{
+    @include mixin.text-style(var(--white), var(--title25), 600);
+}
+
+.text18__class
+{
+    @include mixin.text-style(var(--white), var(--label), initial);
+}
+
+.text__class
+{
+    @include mixin.text-style(var(--white), var(--text), initial);
+}
+.text14__class
+{
+    @include mixin.text-style(var(--white), var(--text14), initial);
+}
+
+.text20__class
+{
+    @include mixin.text-style(var(--white), var(--text20), initial);
+}
+
+.icon__class
+{
+    @include mixin.flex-style($justify:space-between, $align:center);
+    @include mixin.text-style(var(--white), var(--title25), 700);
+    width: min-content;
+    height: min-content;
+}
+
+.icon__class--pink
+{
+    @extend .icon__class;
+    color: var(--background_pink);
+}
+
+.bi
+{
+    &-ubisoft
+    {
+        &::before
+        {
+            content: "\f2d4";
+            display: inline-block;
+            font-family: bootstrap-icons !important;
+            font-style: normal;
+            font-weight: normal !important;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            vertical-align: -0.125em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    }
+}

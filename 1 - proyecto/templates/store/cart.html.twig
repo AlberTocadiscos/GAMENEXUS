@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} GameNexus | Carrito {% endblock %}
+
+{% block body %}
+
+    <main class="cart" role="main">
+        {# Cart products section start #}
+        <section class="cart__products">
+            {% for product in cartContent %}
+                {% set feature = "" %}
+                {% set platformIcon = (product.idPlatform.platformName == 'switch' ? 'nintendo-switch' : product.idPlatform.platformName) %}
+
+                {% for gameFeature in features | filter((gameFeature) => gameFeature.game == product.idGame and gameFeature.idPlatform == product.idPlatform) %}
+                    {% set feature = gameFeature.idFeature %}
+                {% endfor %}
+                
+                {% set discount =  feature.gamePrice * (feature.gameDiscount / 100) | number_format(2) %}
+                {% set price = feature.gamePrice - discount | number_format(2)  %}
+
+                <article class="cart__product" targetgame = " {{ product.idGame }} " targetplatform = " {{ product.idPlatform }} ">
+                    {% for img in images | filter((img) => img.idGame == product.idGame and img.idPlatform == product.idPlatform) %}
+                        <img src="{{ asset('static/img/games/' ~ img.idMedia.mediaUrl ~ '.webp') }}" alt="" class="cart__img">
+                    {% endfor %}
+
+                    {% if feature.gameDiscount != 0 %}
+                        <span class="card__discount">{{ feature.gameDiscount }} %</span>
+                    {% endif %}
+                    <div class="card__content--long">
+                        <h3 class="card__title--long">{{ product.idGame.gameName }}</h3>
+                        <i class="bi bi-x card__icon--delete"></i>
+                        <span class="card__platform"><i class="{{'bi bi-' ~ platformIcon ~ ' card__icon'}}"></i> {{ product.idPlatform.platformName | capitalize }}</span>
+                        <div class="card__selector">
+                            <i class="bi bi-dash-square card__icon--selector"></i>
+                            <span class="cart__cant">{{ product.cant }}</span>
+                            <i class="bi bi-plus-square card__icon--selector"></i>
+                        </div>
+                        {% if discount == 0 %}
+                            <span class="card__price--long">{{ feature.gamePrice }} €</span>
+                        {% else %}
+                            <span class="card__price--long"><span class="card__price--discount">{{ feature.gamePrice }} €</span>{{ (price) | number_format(2) }} €</span>
+                        {% endif %}
+                    </div>
+                </article>
+
+            {% endfor %}
+
+            {% if cartContent | length == 0 %}
+
+            <div class="store__error">
+                <i class="bi-exclamation-triangle  store__error--icon"></i>
+                <span class="store__error--text"> Parece que aún no tienes juegos en tu carrito</span>
+            </div>
+
+            {% endif %}
+        </section>
+        {# Cart products section end #}
+        {# Cart info section start #}
+        <form method="post" action="{{ path('payment') }}"  class="cart__data">
+            <h2 class="cart__title">Detalles del carrito</h2>
+            <ul class="cart__list">
+                <li class="cart__item"><span class="cart__text--light">Productos</span><span class="cart__text">{{ cartCant }}</span></li>
+                <li class="cart__item"><span class="cart__text--light">Total</span><span class="cart__text--total">{{ cart.cartTotal }} €</span></li>
+            </ul>
+            <h2 class="cart__title">Dirección de facturación</h2>
+            <div class="cart__container">
+                {% for bill in billing %}
+                    <div class="cart__billing">
+                        <div class="cart__grid--left">
+                            <input type="radio" name="billingDirection" class="cart__radio" value="{{bill.idBilling}}" required="required">
+                        </div>
+                        <div class="cart__grid--right">
+                            <h3 class="cart__title--billing">{{ bill.billingName }}</h3>
+                            <p class="cart__text--billing">{{ bill.billingDirection }}, {{ bill.billingPoblation }}, {{ bill.billingPostal }}, {{ bill.billingProvince }}</p>
+                            <p class="cart__text--billing">{{ bill.billinTlfo }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <h2 class="cart__title">Método de pago</h2>
+            <div class="cart__container">
+                {% for card in cards %}
+                    <div class="cart__pay">
+                        <div class="cart__grid--left">
+                            <input type="radio" name="payMethod" class="cart__radio" value="{{card.idCard}}" required="required">
+                        </div>
+                        <div class="cart__grid--right">
+                            <h3 class="cart__title--pay">Termina en {{ card.cardNumber | slice((card.cardNumber | length) - 4, card.cardNumber | length) }}</h3>
+                            <p class="cart__text--pay">{{ card.cardName }}</p>
+                            <p class="cart__text--pay">Caduca el 8/29</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="token" value="{{ csrf_token('comodore-amiga') }}">
+            <input type="submit" value="Pagar" class="cart__button">
+            {% for flash in app.session.flashbag.get('error') %}
+                <span class="form__error">  
+                    {{flash}}
+                </span>
+            {% endfor %}
+        </form>
+        {# Cart indo section end #}
+    </main>
+
+{% endblock %}
+
+{% block javascript %}
+
+    <script src="{{ asset('static/javascript/cart.js') }}"></script>
+
+{% endblock %}

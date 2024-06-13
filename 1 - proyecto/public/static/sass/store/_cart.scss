@@ -1,0 +1,135 @@
+@use '../mixins' as mixin;
+@use '../var';
+
+.cart
+{
+    &__data
+    {
+        @extend .card__class;
+        @include mixin.flex-style($justify: space-between, $direction:column);
+        @include mixin.padding(20px);
+        width:clamp(200px, 35vw, 415px);
+        min-height: 150px;
+    }
+
+    &__products
+    {
+        width: 670px;
+        height: min-content;
+    }
+
+    &__title
+    {
+        width: 100%;
+        @include mixin.text-style(var(--white), var(--title25), 600);
+        margin: 10px 0px;
+
+        &--billing
+        {
+            @include mixin.text-style(var(--white), var(--text), 500);
+            margin: 0px 0px 10px 0px;
+        }
+
+        &--pay
+        {
+            @extend .cart__title--billing;
+        }
+    }
+
+    &__list
+    {
+        width: 100%;
+        height: 100px;
+        list-style: none;
+        color: var(--white);
+        @include mixin.flex-style($justify: space-between, $direction:column);
+        padding: 0;
+    }
+
+    &__item
+    {
+        @include mixin.flex-style($justify: space-between);
+        font-size: var(--text20);
+    }
+
+    &__text
+    {
+
+        &--light
+        {
+            color: var(--light_white);
+        }
+
+        &--total
+        {
+            font-size: var(--title25);
+            font-weight: 600;
+        }
+        &--billing
+        {
+            font-size: 14px;
+            color: var(--light_white);
+            margin: 0px 0px 5px 0px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        &--pay
+        {
+            @extend .cart__text--billing;
+        }
+    }
+
+    &__button
+    {
+        @extend .text20__class;
+        width: 100%;
+        background-color: var(--background_pink);
+        padding: 8px 0px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+
+        &:hover
+        {
+            @include mixin.button-hover;
+        }
+    }
+
+    &__img
+    {
+        height: 100%;
+    }
+
+    &__cant
+    {
+        @extend .info__span--data;
+        font-size: var(--text20);
+        margin: 0px 10px;
+    }
+
+    &__billing
+    {
+        @extend .card__class--primary;
+        width: 100%;
+        min-height: 80px;
+        margin: 5px 0px;
+        display: grid;
+        grid-template-columns: 30px calc(100% - 30px);
+    }
+
+    &__pay
+    {
+        @extend .cart__billing;
+    }
+
+    &__radio
+    {
+        accent-color: var(--background_pink);
+        cursor: pointer;
+    }
+}

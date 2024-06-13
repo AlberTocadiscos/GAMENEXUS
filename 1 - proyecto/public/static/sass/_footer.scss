@@ -1,0 +1,87 @@
+@use 'mixins' as mixin;
+@use 'var';
+
+.footer{
+    @include mixin.flex-style($align:center,  $direction:column);
+    width: 100%;
+    height: min-content;
+    margin-top: auto;
+    background:  linear-gradient(180deg, var(--background_secondary) 80%, var(--background_primary) 20%);
+    box-sizing: border-box;
+
+    &__top{
+        @include mixin.flex-style($alignC:center, $justify:left, $wrap:wrap);
+        @include mixin.padding(20px 10px);
+        width: 960px;
+        height: 80%;
+    }
+
+    &__bottom{
+        @include mixin.flex-style($align:center, $justify:center);
+        @include mixin.padding(0px 10px);
+        width: 960px;
+        height: 20%;
+    }
+
+    &__list{
+        height: min-content;
+        list-style: none;
+        color: var(--white);
+        padding: 0;
+        margin: 15px 30px;
+
+        &--networks{
+            @extend .footer__list;
+            margin-left: auto;
+        }
+    }
+
+    &__item, &__item--networks{
+        margin-bottom: 10px;
+        &--title{
+            font-size: var.$label;
+            margin-bottom: 20px;
+        }
+    }
+
+    &__item--networks{
+        @include mixin.flex-style($justify:space-around);
+    }
+
+    &__link, &__copy{
+        @extend .text__class;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    &__copy
+    {
+        white-space: pre-line;
+        text-align: center;
+    }
+
+    &__link{
+        &:hover{
+            color: var(--background_pink);
+        }
+    }
+
+    &__logo{
+        width: 350px;
+        align-self: center;
+    }
+
+    &__icon{
+        width: 40px;
+        height: 50px;
+
+        path{
+            fill: var(--white);
+        }
+
+        circle{
+            stroke: var(--white);
+            stroke-width: 1;
+        }
+    }
+}

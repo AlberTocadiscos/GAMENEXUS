@@ -1,0 +1,97 @@
+@use 'mixins' as mixin;
+@use 'var';
+
+.index
+{
+    @extend .main;
+
+    &__gallery
+    {
+        width: 100%;
+        height: min-content;
+        max-height: 500px;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden
+    }
+
+    &__title
+    {
+        @extend .title__class;
+    }
+
+    &__container
+    {
+        height: min-content;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 280px); 
+        row-gap: 10px;
+        justify-content: space-between
+    }
+
+    &__card
+    {
+        @extend .card;
+    }
+
+    &__banner
+    {
+        width: 100%;
+        height: 250px;
+        margin-top: 40px;
+        border-radius: 8px;
+        background-position: center;
+        background-size: cover;
+
+        &--1
+        {
+            background-image: url('../img/indexBanner1.webp');
+        }
+
+        &--2
+        {
+            background-image: url('../img/indexBanner2.webp');
+        }
+    }
+
+    &__arrow
+    {
+        @extend .icon__class;
+        background-color: var(--background_pink);
+        border: 5px solid var(--background_pink);
+        border-radius: 100%;
+        padding: 5px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        cursor: pointer;
+
+        &:first-of-type
+        {
+            left: 40px;
+        }
+        &:last-of-type
+        {
+            right: 40px;
+        }
+    }
+}
+
+.gallery
+{
+    &__asset
+    {
+        &--index
+        {
+            width: 1280px;
+        }
+
+    }
+
+    &__wrapper
+    {
+
+    }
+}
